@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -20,20 +22,20 @@ public class CadastroCidadeService {
 	private EstadoRepository estadoRepository;
 	
 	public Cidade salvar(Cidade cidade) {
-		Estado estado = estadoRepository.porId(cidade.getEstado().getId());
+		Optional<Estado> estado = estadoRepository.findById(cidade.getEstado().getId());
 		
-		if(estado == null) {
+		if(estado.isEmpty()) {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Não existe cadastro de estado com código %d", cidade.getEstado().getId()));
 		}
 		
-		cidade.setEstado(estado);
-		return cidadeRepository.adicionar(cidade);
+		cidade.setEstado(estado.get());
+		return cidadeRepository.save(cidade);
 	}
 	
 	public void excluir(Long cidadeId) {
 		try {
-			cidadeRepository.remover(cidadeId);
+			cidadeRepository.deleteById(cidadeId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
 							String.format("Não existe um cadastro de cidade com o código %d", cidadeId));
