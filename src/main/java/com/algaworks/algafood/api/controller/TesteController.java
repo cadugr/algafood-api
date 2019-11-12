@@ -54,7 +54,7 @@ public class TesteController {
 		return restauranteRepository.findTop2ByNomeContaining(nome);
 	}
 	
-	@GetMapping("/restaurantes/count-por_cozinha")
+	@GetMapping("/restaurantes/count-por-cozinha")
 	public int restaurantesCountPorCozinha(Long cozinhaId) {
 		return restauranteRepository.countByCozinhaId(cozinhaId);
 	}
